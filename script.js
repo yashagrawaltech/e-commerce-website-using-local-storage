@@ -1,74 +1,118 @@
 import { products } from "./data/products.data.js";
+import { addToCart } from "./functions/add-to-cart.function.js";
+import { createOrderList } from "./functions/create-order-list.function.js";
+import { displayProducts } from "./functions/display-products.function.js";
+import { loadProductBtns } from "./functions/load-product.btns.function.js";
+import { removeFromList } from "./functions/remove-from-cart.function.js";
+import { saveCartToLocalStorage } from "./functions/save-cart-to-local.function.js";
+import { triggerSearch } from "./functions/trigger-search.function.js";
+import { updateAddToCartBtn } from "./functions/update-add-to-cart-btn.function.js";
+import { updateCountElement } from "./functions/update-count-elem.function.js";
+import { updateIncreaseDecreaseProductBtns } from "./functions/update-inc-dec-quantity-btn.function.js";
 
-function displayProducts() {
+let localCart = JSON.parse(localStorage.getItem("local-cart")) || [];
+let liveCart = Array.from(localCart);
+let orderList;
+orderList = createOrderList(orderList, liveCart);
+// console.log(localCart);
+// console.log(liveCart);
+// console.log(orderList);
+
+function triggerAddToCartBtn() {
   const productContainer = document.querySelector(".products-container");
-  productContainer.innerHTML = "";
-  products.forEach((e, index) => {
-    productContainer.innerHTML += `
-        <div
-          data-product-id="${e.product_id}"
-          data-index="${index}"
-          class="product p-[1rem] shadow-[rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] rounded-xl flex flex-col justify-between"
-        >
-          <div>
-            <img
-              class="aspect-square w-fill bg-zinc-200 object-cover overflow-hidden object-center"
-              src="${e.product_img}"
-              alt=""
-            />
-            <div class="product-details mt-[1rem]">
-              <h2
-                class="text-xl font-medium overflow-hidden text-ellipsis line-clamp-2"
-              >
-                ${e.product_name}
-              </h2>
-              <h3 class="text-lg">₹${e.product_price}</h3>
-              <p class="text-sm text-zinc-600">by - ${e.product_seller}</p>
-            </div>
-            <div
-              class="product-desc overflow-hidden text-ellipsis w-full mt-[0.5rem] line-clamp-2 text-base"
-            >
-              ${e.product_desc}
-            </div>
-          </div>
-          <div class="product-card-btns">
-            <button
-              data-product-id="${e.product_id}"
-              data-index="${index}"
-              class="add-to-cart-btn w-full p-[0.5rem] bg-zinc-400 mt-[1.5rem]"
-            >
-              Add to cart
-            </button>
-            <div data-product-id="${e.product_id}"
-                data-index="${index}" class="add-more-or-less-btns mt-[1rem] flex justify-between items-center hidden">
-              <button
-                data-product-id="${e.product_id}"
-                data-index="${index}"
-                class="less h-[2rem] w-[2rem] flex justify-center items-center shadow-[rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] rounded-xl"
-              >
-                <i class="ri-subtract-line pointer-events-none"></i>
-              </button>
-              <p
-                data-product-id="${e.product_id}"
-                data-index="${index}"
-                class="cart-product-quantity"
-              >
-                ${e.quantity}
-              </p>
-              <button
-                data-product-id="${e.product_id}"
-                data-index="${index}"
-                class="add h-[2rem] w-[2rem] flex justify-center items-center shadow-[rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] rounded-xl"
-              >
-                <i class="ri-add-line pointer-events-none"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        `;
+  productContainer.addEventListener("click", (e) => {
+    if (e.target.classList.contains("add-to-cart-btn")) {
+      const productId = e.target.dataset.productId;
+      const btnIndex = e.target.dataset.index;
+      // console.log(productIndex)
+      // console.log(productId)
+
+      const productIndex = products.findIndex(
+        (element) => element.product_id === productId
+      );
+
+      // console.log(productIndex);
+
+      addToCart(liveCart, products[productIndex]);
+      // console.log(liveCart);
+
+      updateCountElement(liveCart);
+
+      localCart = saveCartToLocalStorage(localCart, liveCart);
+      liveCart = Array.from(localCart);
+      // console.log(localCart);
+
+      orderList = createOrderList(orderList, liveCart);
+      // console.log(orderList);
+
+      updateAddToCartBtn(btnIndex, productId, orderList);
+      updateIncreaseDecreaseProductBtns(btnIndex, productId, orderList);
+    }
+  });
+}
+
+function triggerIncreaseDecreaseProductBtn() {
+  const productContainer = document.querySelector(".products-container");
+  productContainer.addEventListener("click", (e) => {
+    if (e.target.classList.contains("add")) {
+      const productId = e.target.dataset.productId;
+      const btnIndex = e.target.dataset.index;
+      const productIndex = products.findIndex(
+        (element) => element.product_id === productId
+      );
+
+      addToCart(liveCart, products[productIndex]);
+      updateCountElement(liveCart);
+
+      localCart = saveCartToLocalStorage(localCart, liveCart);
+      liveCart = Array.from(localCart);
+      // console.log(localCart);
+
+      orderList = createOrderList(orderList, liveCart);
+      // console.log(orderList);
+
+      updateIncreaseDecreaseProductBtns(btnIndex, productId, orderList);
+    }
+
+    if (e.target.classList.contains("less")) {
+      const productId = e.target.dataset.productId;
+      const btnIndex = e.target.dataset.index;
+      let indexAtOrderList = orderList.findIndex(
+        (element) => element.product.product_id === productId
+      );
+      let quantity = orderList[indexAtOrderList].quantity;
+
+      if (quantity !== 0) {
+        const productIndexInLiveCart = liveCart.findIndex(
+          (element) => element.product_id === productId
+        );
+
+        removeFromList(liveCart, productIndexInLiveCart);
+        updateCountElement(liveCart);
+        localCart = saveCartToLocalStorage(localCart, liveCart);
+        liveCart = Array.from(localCart);
+        // console.log(localCart);
+
+        orderList = createOrderList(orderList, liveCart);
+        // console.log(orderList);
+
+        updateIncreaseDecreaseProductBtns(btnIndex, productId, orderList);
+      }
+
+      if (quantity === 0) {
+        removeFromList(orderList, indexAtOrderList);
+        updateCountElement(liveCart);
+        updateIncreaseDecreaseProductBtns(btnIndex, productId, orderList);
+      }
+    }
   });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    displayProducts();
-})
+  displayProducts(products);
+  updateCountElement(liveCart);
+  triggerAddToCartBtn();
+  loadProductBtns(orderList);
+  triggerIncreaseDecreaseProductBtn();
+  triggerSearch();
+});
