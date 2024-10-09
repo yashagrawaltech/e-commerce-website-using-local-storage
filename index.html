@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      E-commerce Website using HTML, Tailwind, JavaScript and Local Storage.
+    </title>
+
+    <!-- Font Rubik -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Rubik -->
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind -->
+
+    <!-- Remix Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <!-- Remix Icons -->
+  </head>
+  <body>
+    <div class="main font-[Rubik] px-[2rem]">
+      <header
+        class="header w-full mt-[1rem] flex items-center justify-between gap-[4rem]"
+      >
+        <a
+          href="./index.html"
+          class="home-page-link relative shadow-[rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] rounded-xl hidden"
+        >
+          <div
+            class="h-[3rem] w-[3rem] flex justify-center items-center relative"
+          >
+            <i class="ri-home-5-line text-2xl pointer-events-none"></i>
+          </div>
+        </a>
+        <h1 class="text-xl w-fit flex-shrink-0">
+          E-commerce using Local Storage.
+        </h1>
+        <div class="search-form-container w-full">
+          <form
+            class="search-form w-full flex items-center justify-between gap-4 relative"
+            action=""
+          >
+            <div class="search-input-container text w-full">
+              <input
+                class="search-input w-full h-[3rem] bg-zinc-200 py-[1rem] px-[1.5rem]"
+                type="text"
+                name="search"
+                placeholder="Search Products"
+                autocomplete="off"
+              />
+            </div>
+            <button
+              class="search-btn w-[3rem] h-[3rem] border-solid border-2 flex items-center justify-center shrink-0"
+              type="submit"
+            >
+              <i class="ri-search-line text-2xl pointer-events-none"></i>
+            </button>
+
+            <!-- Search Container -->
+            <div
+              class="search-container absolute w-full p-[1rem] bg-white top-[4rem] shadow-[rgba(0,_0,_0,_0.05)_0px_6px_24px_0px,_rgba(0,_0,_0,_0.08)_0px_0px_0px_1px] rounded-xl max-h-[30rem] overflow-y-auto hidden"
+            >
+              <ul
+                class="search-result-list w-full flex flex-col gap-[1.5rem] justify-start"
+              >
+                <li
+                  class="search-result w-full hover:bg-zinc-200 p-[0.5rem]"
+                  data-product-id="${e.product_id}"
+                  data-index="${e.index}"
+                >
+                  <div
+                    class="search w-full flex items-center justify-start gap-4 pointer-events-none"
+                    data-product-id="${e.product_id}"
+                    data-index="${e.index}"
+                  >
+                    <div
+                      class="search-icon w-[2rem] h-[2rem] flex items-center justify-center shrink-0"
+                    >
+                      <i class="ri-search-line text-xl pointer-events-none"></i>
+                    </div>
+                    <div
+                      class="product-name w-[50%] font-[Rubik] text-left"
+                      data-product-id="${e.product_id}"
+                      data-index="${e.index}"
+                    >
+                      product name
+                    </div>
+                  </div>
+                </li>
+                <li
+                  class="search-result w-full hover:bg-zinc-200 p-[0.5rem]"
+                  data-product-id="${e.product_id}"
+                  data-index="${e.index}"
+                >
+                  <div
+                    class="search w-full flex items-center justify-start gap-4 pointer-events-none"
+                    data-product-id="${e.product_id}"
+                    data-index="${e.index}"
+                  >
+                    <div
+                      class="search-icon w-[2rem] h-[2rem] flex items-center justify-center shrink-0"
+                    >
+                      <i class="ri-search-line text-xl pointer-events-none"></i>
+                    </div>
+                    <div
+                      class="product-name w-[50%] font-[Rubik] text-left"
+                      data-product-id="${e.product_id}"
+                      data-index="${e.index}"
+                    >
+                      product name
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <!-- Search Container -->
+          </form>
+        </div>
+        <a
+          href="./cart.html"
+          class="cart-page-link relative shadow-[rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] rounded-xl"
+        >
+          <div
+            class="h-[3rem] w-[3rem] flex justify-center items-center relative"
+          >
+            <i class="ri-shopping-cart-line text-2xl pointer-events-none"></i>
+            <div
+              class="cart-items-count absolute bg-red-500 text-white h-[2rem] w-[2rem] flex justify-center items-center rounded-full top-[2rem] start-[-1rem] hidden"
+            >
+              4
+            </div>
+          </div>
+        </a>
+      </header>
+
+      <!-- Products -->
+      <section class="products-container grid grid-cols-5 gap-[1rem] mt-[2rem]">
+        <!-- <div
+          class="product p-[1rem] shadow-[rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] rounded-xl flex flex-col justify-between"
+          data-product-id="${e.product_id}"
+          data-index="${index}"
+        >
+          <div class="product-info">
+            <img
+              class="aspect-square w-fill bg-zinc-200 object-cover overflow-hidden object-center"
+              src="${e.product_img}"
+              alt=""
+            />
+            <div class="product-details mt-[1rem]">
+              <h2
+                class="text-xl font-medium overflow-hidden text-ellipsis line-clamp-2"
+              >
+                ${e.product_name}
+              </h2>
+              <h3 class="text-lg">₹${e.product_price}</h3>
+              <p class="text-sm text-zinc-600">by - ${e.product_seller}</p>
+            </div>
+            <div
+              class="product-desc overflow-hidden text-ellipsis w-full mt-[0.5rem] line-clamp-2 text-base"
+            >
+              ${e.product_desc}
+            </div>
+          </div>
+          <div class="product-card-btns">
+            <button
+              class="add-to-cart-btn w-full p-[0.5rem] bg-zinc-400 mt-[1.5rem]"
+              data-product-id="${e.product_id}"
+              data-index="${index}"
+            >
+              Add to cart
+            </button>
+            <div
+              class="inc-or-dec-quantity-btns mt-[1rem] flex justify-between items-center hidden"
+              data-product-id="${e.product_id}"
+              data-index="${index}"
+            >
+              <button
+                data-product-id="${e.product_id}"
+                data-index="${index}"
+                class="less h-[2rem] w-[2rem] flex justify-center items-center shadow-[rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] rounded-xl"
+              >
+                <i class="ri-subtract-line pointer-events-none"></i>
+              </button>
+              <p
+                data-product-id="${e.product_id}"
+                data-index="${index}"
+                class="quantity-in-cart"
+              >
+                ${e.quantity}
+              </p>
+              <button
+                data-product-id="${e.product_id}"
+                data-index="${index}"
+                class="add h-[2rem] w-[2rem] flex justify-center items-center shadow-[rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] rounded-xl"
+              >
+                <i class="ri-add-line pointer-events-none"></i>
+              </button>
+            </div>
+          </div>
+        </div> -->
+      </section>
+      <!-- Products -->
+
+      <footer class="footer text-center mt-[4rem] py-[1rem]">
+        <p class="text-base">
+          E-commerce Website using HTML, Tailwind, JavaScript and Local Storage.
+        </p>
+      </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="./Scripts/script.js"></script>
+    <!-- Scripts -->
+  </body>
+</html>
